@@ -13,7 +13,7 @@
 ```
 
 二、使用GPT作为LLM
-1. 申请openai的api key
+1. 申请openai的api key(需要包括api key、api version、endpoint)
 2. 运行如下命令
    ```
    python -m mcp_tool.py mcp_client_gpt.py
