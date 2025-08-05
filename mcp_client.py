@@ -101,11 +101,8 @@ class MCPClient:
     async def chat_loop(self):
         """Run an interactive chat loop"""
         print("\nMCP Client Started!")
-<<<<<<< HEAD
-        print("Type your queries or 'quit' to exit.")
-=======
         print("Type your queries or 'qu' to exit.")
->>>>>>> f1c661e (commit)
+
 
         while True:
             try:
