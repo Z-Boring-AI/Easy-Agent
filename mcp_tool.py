@@ -63,7 +63,7 @@ def handle_calculation(expression:str=Field(description='需要计算的具体�
 
 
 # Word文档处理函数
-@mcp.tool(name='doc writer',description='将输出内容写入文档')
+@mcp.tool(name='doc_writer',description='将输出内容写入文档')
 def handle_word(content:str=Field(description='需要写入文档的文本')):
     """处理Word文档操作请求"""
 
