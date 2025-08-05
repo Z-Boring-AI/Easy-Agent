@@ -2,6 +2,8 @@
 一个简单的agent框架，使用function_calling的方式调用MCP工具
 
 # Quick Start
+一、使用豆包作为LLM
+
 1. 申请豆包API
 
    参考https://www.volcengine.com/docs/82379/1541594
@@ -9,6 +11,13 @@
 ```
   python -m mcp_tool.py mcp_client.py
 ```
+
+二、使用GPT作为LLM
+1. 申请openai的api key
+2. 运行如下命令
+   ```
+   python -m mcp_tool.py mcp_client_gpt.py
+   ```
 
 # 运行示例
 ```[08/05/25 11:36:55] INFO     Starting MCP server 'agent_tool' with transport 'stdio'                                                                                                           
