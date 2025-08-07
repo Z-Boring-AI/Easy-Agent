@@ -10,7 +10,6 @@ from pypinyin import pinyin, Style
 # 初始化MCP服务器
 mcp = FastMCP('agent_tool')
 
-
 # 天气查询处理函数
 @mcp.tool(name='weather',description='搜索城市天气')
 async def handle_weather(city:str=Field(description='地点的位置信息，例如北京、上海')) -> dict:

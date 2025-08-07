@@ -2,10 +2,8 @@ import asyncio
 import json
 from typing import Optional
 from contextlib import AsyncExitStack
-
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-
 from dotenv import load_dotenv
 import os
 from openai import AsyncAzureOpenAI
