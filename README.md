@@ -1,6 +1,33 @@
 # Easy Agent
 一个简单的agent框架，使用function_calling的方式调用MCP工具
 
+# 工具列表
+目前提供以下工具
+1. 计算器：用于计算公式
+   使用示例
+   ```
+   Query:计算5*46+3
+   结果：233
+   ```
+2. 天气查询：查询所在地的天气
+   使用示例
+   ```
+   Query:广州的天气
+   结果：晴，25℃，3级风
+   ```
+3. 文档写入：通过操控键盘实现内容的模拟输入
+4. 打开文档软件：通过操控鼠标移动来打开文档软件 (通常与文档写入工具配合使用)
+   使用示例
+   ```
+   Query:打开文档并输入hello world
+   ```
+5. 打开网页搜索内容：通过操控鼠标和键盘实现自动打开网页并输入搜索内容
+   使用示例
+   ```
+   Query:搜索今天的新闻
+   ```
+
+
 # Quick Start
 一、使用豆包作为LLM
 
@@ -19,24 +46,5 @@
    python -m mcp_tool.py mcp_client_gpt.py
    ```
 
-# 运行示例
-```[08/05/25 11:36:55] INFO     Starting MCP server 'agent_tool' with transport 'stdio'                                                                                                           
 
-Connected to server with tools: ['weather', 'calculator', 'doc writer']
-
-MCP Client Started!
-Type your queries or 'q' to exit.
-
-Query:计算5*46+3
-工具calculator调用结果：233
-
-
-Query:查询天气
-工具weather调用结果：北京天气：
-晴，25℃，3级风
-
-
-Query:生成一个故事并保存到文档
-工具doc writer调用结果：文档已保存为 agent_mcp.docx
-```
 
