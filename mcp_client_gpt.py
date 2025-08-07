@@ -7,9 +7,9 @@ from mcp.client.stdio import stdio_client
 from dotenv import load_dotenv
 import os
 from openai import AsyncAzureOpenAI
-os.environ['OPENAI_API_KEY'] = "Your API key"
-os.environ['API_VERSION'] = "API version"
-os.environ['ENDPOINT'] = "End point"
+os.environ['OPENAI_API_KEY'] = "Your API KEY"
+os.environ['API_VERSION'] = "API VERSION"
+os.environ['ENDPOINT'] = "END POINT"
 load_dotenv()  # load environment variables from .env
 client = AsyncAzureOpenAI(api_key=os.getenv('OPENAI_API_KEY'),api_version=os.getenv('API_VERSION'),
                           azure_endpoint=os.getenv('ENDPOINT'))
@@ -37,7 +37,7 @@ class MCPClient:
         server_params = StdioServerParameters(
             command=command,
             args=[server_script_path],
-            env=None
+            env={**os.environ, 'DISPLAY': os.getenv('DISPLAY', ':0')}
         )
 
         stdio_transport = await self.exit_stack.enter_async_context(stdio_client(server_params))
@@ -53,7 +53,7 @@ class MCPClient:
 
     async def process_query(self, query: str):
         """Process a query using Claude and available tools"""
-        messages = [
+        messages = [{"role":'system',"content":"你拥有一系列的MCP工具可以调用，请根据用户的实际需求选择合适的MCP工具，请分步骤完成，每个步骤都可以调用不同的MCP工具"},
             {
                 "role": "user",
                 "content": query
@@ -73,7 +73,7 @@ class MCPClient:
                       "type": tool.inputSchema['type'],
                       "properties": tool.inputSchema['properties']
                       },
-                      "required": tool.inputSchema['required']
+                      "required": tool.inputSchema.get('required',[])
                     }
                   }
 
@@ -85,16 +85,18 @@ class MCPClient:
             messages=messages,
             tools=tool_functions
         )
-        tool_call = response.choices[0].message.tool_calls[0]
-        tool_result = await self.execute_tool(tool_call)
-        print(f'工具{tool_call.function.name}调用结果：{tool_result}')
-        return tool_result
+
+        tool_call = response.choices[0].message.tool_calls
+        for tool in tool_call:
+            tool_result = await self.execute_tool(tool)
+            print(f'工具{tool.function.name}调用结果：{tool_result}')
+            #return tool_result
 
     async def execute_tool(self,tool_call):
         toolname = tool_call.function.name
         params = json.loads(tool_call.function.arguments)
         result = await self.session.call_tool(toolname,params)
-        print(result)
+        # print(result)
         tool_output = json.loads(result.content[0].text)['result']
         #print(tool_output)
         return tool_output
@@ -108,13 +110,9 @@ class MCPClient:
         while True:
             try:
                 query = input("\nQuery:").strip()
-
                 if query.lower() == 'q':
                     break
-
-                response = await self.process_query(query)
-                print(response)
-
+                await self.process_query(query)
             except Exception as e:
                 raise e
 

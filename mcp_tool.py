@@ -1,12 +1,7 @@
-from datetime import datetime
-
 import docx
-import httpx
 from fastmcp import FastMCP
 from pydantic import Field
-import requests
-from pypinyin import pinyin, Style
-
+import pyautogui
 # 初始化MCP服务器
 mcp = FastMCP('agent_tool')
 
@@ -62,28 +57,60 @@ def handle_calculation(expression:str=Field(description='需要计算的具体�
 
 
 # Word文档处理函数
-@mcp.tool(name='doc_writer',description='将输出内容写入文档')
+@mcp.tool(name='doc_writer',description='操作键盘，将输出内容写入文档')
 def handle_word(content:str=Field(description='需要写入文档的文本')):
     """处理Word文档操作请求"""
 
     if not content:
         return {"status": "error", "message": "请提供文档内容"}
-
     try:
-        doc = docx.Document()
-        doc.add_heading('由FastMCP Agent创建的文档', 0)
-        doc.add_paragraph(content)
-
-
-
-        filename = f"agent_mcp.docx"
-        doc.save(filename)
+        pyautogui.typewrite(content,interval=0.25)
+        # doc = docx.Document()
+        # doc.add_heading('由FastMCP Agent创建的文档', 0)
+        # doc.add_paragraph(content)
+        # filename = f"agent_mcp.docx"
+        # doc.save(filename)
         return {
             "status": "success",
-            "result": f"文档已保存为 {filename}"
+            "result": f"已写入以下内容{content}"
         }
     except Exception as e:
         return {"status": "error", "message": f"Word操作错误: {str(e)}"}
+
+@mcp.tool(name='open_terminal',description='打开终端')
+def open_terminal():
+    pyautogui.moveTo(35,614,duration=2)
+    pyautogui.click(35,614)
+    return {
+        'status':"success",
+        "result":'ok'
+    }
+
+@mcp.tool(name='open_web',description='打开网页并搜索内容')
+def open_web(contenr:str=Field(description='需要搜索的内容')):
+    pyautogui.moveTo(38,70,duration=2)
+    pyautogui.click(38,70,button='RIGHT')
+    pyautogui.moveTo(131,103,duration=1)
+    pyautogui.click(131,103)
+    pyautogui.moveTo(798,565,duration=2)
+    pyautogui.click(798,565)
+    pyautogui.typewrite(contenr,interval=0.25)
+    pyautogui.press('enter')
+    return {
+        'status': "success",
+        "result": 'ok'
+    }
+
+@mcp.tool(name='open_doc',description='操作鼠标，打开docx软件')
+def open_doc():
+    pyautogui.moveTo(32,339,duration=2)
+    pyautogui.click(32,339)
+    return {
+        'status': "success",
+        "result": 'ok'
+    }
+
+
 
 
 if __name__ == "__main__":
